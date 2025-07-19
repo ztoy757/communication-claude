@@ -20,7 +20,7 @@ RUN mkdir -p /workspace $HOME/.claude && \
   chown -R vscode:vscode /workspace $HOME/.claude
 
 COPY entrypoint.sh /entrypoint.sh
-RUN chown vscode:vscode /entrypoint.sh
+RUN chmod +x /entrypoint.sh && chown vscode:vscode /entrypoint.sh
 
 USER vscode
 

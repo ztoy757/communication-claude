@@ -1,7 +1,7 @@
 {
   "name": "multi claude agent",
   "dockerComposeFile": "compose.yaml",
-  "service": "frontend",
+  "service": "app",
   "workspaceFolder": "/workspace",
   "remoteUser": "vscode"
 }

@@ -5,6 +5,7 @@ logs/
 
 # 一時ファイル
 tmp/
+.claude/tmp/
 *.tmp
 *_done.txt
 
