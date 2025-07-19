@@ -1,0 +1,23 @@
+# シェルスクリプトは常にLF改行を使用
+*.sh text eol=lf
+
+# その他のテキストファイルの改行コード設定
+*.txt text
+*.md text
+*.json text
+*.js text
+*.ts text
+*.tsx text
+*.jsx text
+*.css text
+*.html text
+*.yml text
+*.yaml text
+
+# バイナリファイル
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary

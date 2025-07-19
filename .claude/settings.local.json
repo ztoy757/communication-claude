@@ -12,7 +12,15 @@
       "Bash(then)",
       "Bash(else)",
       "Bash(tmux show-options:*)",
-      "Bash(ls:*)"
+      "Bash(ls:*)",
+      "Bash(npx tsc:*)",
+      "Bash(rm:*)",
+      "Bash(npm install)",
+      "Bash(npm cache clean:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run typecheck:*)",
+      "Bash(npm run start:*)",
+      "Bash(timeout 30s npm start:*)"
     ],
     "deny": []
   }

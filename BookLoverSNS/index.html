@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BookLover SNS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --secondary-gradient: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --accent-gradient: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --dark-gradient: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            
+            --bg-primary: #fafbfc;
+            --bg-card: #ffffff;
+            --bg-dark: #1a1a1a;
+            --bg-card-dark: #2d2d2d;
+            
+            --text-primary: #2d3748;
+            --text-secondary: #718096;
+            --text-dark: #ffffff;
+            --text-secondary-dark: #cbd5e0;
+            
+            --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1);
+            --shadow-lg: 0 10px 25px rgba(0, 0, 0, 0.15);
+            --shadow-xl: 0 20px 40px rgba(0, 0, 0, 0.2);
+            
+            --border-radius: 16px;
+            --border-radius-sm: 8px;
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        body.dark {
+            background: var(--bg-dark);
+            color: var(--text-dark);
+        }
+        
+        .container {
+            max-width: 420px;
+            margin: 0 auto;
+            background: var(--bg-card);
+            min-height: 100vh;
+            box-shadow: var(--shadow-xl);
+            border-radius: 0;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        body.dark .container {
+            background: var(--bg-card-dark);
+        }
+        
+        .header {
+            background: var(--primary-gradient);
+            color: white;
+            padding: var(--spacing-xl) var(--spacing-lg);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="2" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
+            animation: float 20s linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0) rotate(0deg); }
+            100% { transform: translateY(-100px) rotate(360deg); }
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: var(--spacing-sm);
+            position: relative;
+            z-index: 1;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+            font-weight: 300;
+            position: relative;
+            z-index: 1;
+        }
+
+        .theme-toggle {
+            position: absolute;
+            top: var(--spacing-lg);
+            right: var(--spacing-lg);
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            padding: var(--spacing-sm);
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            z-index: 2;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+        
+        .nav {
+            display: flex;
+            background: var(--bg-card);
+            padding: 0;
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            transition: all 0.3s ease;
+        }
+
+        body.dark .nav {
+            background: var(--bg-card-dark);
+        }
+        
+        .nav-item {
+            flex: 1;
+            text-align: center;
+            padding: var(--spacing-md);
+            color: var(--text-secondary);
+            text-decoration: none;
+            position: relative;
+            transition: all 0.3s ease;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        body.dark .nav-item {
+            color: var(--text-secondary-dark);
+        }
+
+        .nav-item i {
+            display: block;
+            font-size: 20px;
+            margin-bottom: var(--spacing-xs);
+        }
+        
+        .nav-item.active {
+            color: #667eea;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
+        }
+
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 30px;
+            height: 3px;
+            background: var(--primary-gradient);
+            border-radius: 2px;
+        }
+        
+        .nav-item:hover {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.05);
+        }
+        
+        .content {
+            padding: var(--spacing-lg);
+            background: var(--bg-primary);
+            min-height: calc(100vh - 200px);
+            transition: all 0.3s ease;
+        }
+
+        body.dark .content {
+            background: var(--bg-dark);
+        }
+        
+        .screen {
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .screen.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: var(--spacing-lg);
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .book-item {
+            background: var(--bg-card);
+            border-radius: var(--border-radius);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+            box-shadow: var(--shadow-md);
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        body.dark .book-item {
+            background: var(--bg-card-dark);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .book-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--primary-gradient);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .book-item:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .book-item:hover::before {
+            transform: scaleX(1);
+        }
+        
+        .book-title {
+            font-weight: 600;
+            font-size: 18px;
+            margin-bottom: var(--spacing-sm);
+            color: var(--text-primary);
+        }
+
+        body.dark .book-title {
+            color: var(--text-dark);
+        }
+        
+        .book-author {
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-md);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        body.dark .book-author {
+            color: var(--text-secondary-dark);
+        }
+        
+        .book-description {
+            font-size: 14px;
+            line-height: 1.6;
+            margin-bottom: var(--spacing-md);
+            color: var(--text-secondary);
+        }
+
+        body.dark .book-description {
+            color: var(--text-secondary-dark);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: var(--spacing-sm);
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            background: var(--primary-gradient);
+            color: white;
+            border: none;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--border-radius-sm);
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn.secondary {
+            background: var(--secondary-gradient);
+        }
+
+        .btn.accent {
+            background: var(--accent-gradient);
+        }
+        
+        .input {
+            width: 100%;
+            padding: var(--spacing-md);
+            border: 2px solid rgba(102, 126, 234, 0.1);
+            border-radius: var(--border-radius-sm);
+            margin-bottom: var(--spacing-md);
+            font-size: 16px;
+            background: var(--bg-card);
+            color: var(--text-primary);
+            transition: all 0.3s ease;
+        }
+
+        body.dark .input {
+            background: var(--bg-card-dark);
+            color: var(--text-dark);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .input:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+        
+        .search-section {
+            margin-bottom: var(--spacing-xl);
+            position: relative;
+        }
+
+        .search-section .input {
+            padding-left: 45px;
+        }
+
+        .search-section::before {
+            content: '\f002';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            left: var(--spacing-md);
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-secondary);
+            z-index: 1;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius);
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+        }
+
+        body.dark .stat-card {
+            background: var(--bg-card-dark);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .stat-number {
+            font-size: 28px;
+            font-weight: 700;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            font-weight: 500;
+            margin-top: var(--spacing-xs);
+        }
+
+        body.dark .stat-label {
+            color: var(--text-secondary-dark);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 6px;
+            background: rgba(102, 126, 234, 0.1);
+            border-radius: 3px;
+            overflow: hidden;
+            margin: var(--spacing-sm) 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary-gradient);
+            border-radius: 3px;
+            transition: width 1s ease;
+        }
+
+        .floating-action {
+            position: fixed;
+            bottom: var(--spacing-xl);
+            right: var(--spacing-xl);
+            width: 56px;
+            height: 56px;
+            background: var(--primary-gradient);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 20px;
+            cursor: pointer;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .floating-action:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-xl);
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                border-radius: 0;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- ヘッダー -->
+        <div class="header">
+            <button class="theme-toggle" onclick="toggleTheme()">
+                <i class="fas fa-moon" id="theme-icon"></i>
+            </button>
+            <h1>📚 BookLover SNS</h1>
+            <p>読書で繋がるソーシャルネットワーク</p>
+        </div>
+        
+        <!-- ナビゲーション -->
+        <div class="nav">
+            <a href="#" class="nav-item active" onclick="showScreen('home', this)">
+                <i class="fas fa-home"></i>
+                ホーム
+            </a>
+            <a href="#" class="nav-item" onclick="showScreen('search', this)">
+                <i class="fas fa-search"></i>
+                検索
+            </a>
+            <a href="#" class="nav-item" onclick="showScreen('shelf', this)">
+                <i class="fas fa-book"></i>
+                本棚
+            </a>
+            <a href="#" class="nav-item" onclick="showScreen('profile', this)">
+                <i class="fas fa-user"></i>
+                プロフィール
+            </a>
+        </div>
+        
+        <!-- コンテンツエリア -->
+        <div class="content">
+            <!-- ホーム画面 -->
+            <div id="home" class="screen active">
+                <h2 class="section-title">最新の投稿</h2>
+                <div class="book-item">
+                    <div class="book-title">夏目漱石全集</div>
+                    <div class="book-author">夏目漱石</div>
+                    <div class="book-description">
+                        「こころ」を読了しました。人間の心理描写が素晴らしく、現代でも通じる普遍的なテーマだと感じました。
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn"><i class="fas fa-heart"></i> いいね (12)</button>
+                        <button class="btn secondary"><i class="fas fa-comment"></i> コメント</button>
+                    </div>
+                </div>
+                
+                <div class="book-item">
+                    <div class="book-title">ハリー・ポッターと賢者の石</div>
+                    <div class="book-author">J.K.ローリング</div>
+                    <div class="book-description">
+                        何度読んでも新しい発見があります。魔法の世界に引き込まれる素晴らしいファンタジー小説です。
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn"><i class="fas fa-heart"></i> いいね (8)</button>
+                        <button class="btn secondary"><i class="fas fa-comment"></i> コメント</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 検索画面 -->
+            <div id="search" class="screen">
+                <h2 class="section-title">本を検索</h2>
+                <div class="search-section">
+                    <input type="text" class="input" placeholder="書籍名、著者名で検索...">
+                    <button class="btn accent"><i class="fas fa-search"></i> 検索</button>
+                </div>
+                
+                <div class="book-item">
+                    <div class="book-title">吾輩は猫である</div>
+                    <div class="book-author">夏目漱石</div>
+                    <div class="book-description">
+                        明治時代の名作。猫の視点から描かれる人間社会への風刺が面白い。
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn"><i class="fas fa-bookmark"></i> 読みたい</button>
+                        <button class="btn accent"><i class="fas fa-check"></i> 読了</button>
+                    </div>
+                </div>
+                
+                <div class="book-item">
+                    <div class="book-title">坊ちゃん</div>
+                    <div class="book-author">夏目漱石</div>
+                    <div class="book-description">
+                        青春小説の古典。主人公の正義感と純粋さが印象的。
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn"><i class="fas fa-bookmark"></i> 読みたい</button>
+                        <button class="btn accent"><i class="fas fa-check"></i> 読了</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 本棚画面 -->
+            <div id="shelf" class="screen">
+                <h2 class="section-title">マイ本棚</h2>
+                
+                <h3><i class="fas fa-book-open"></i> 現在読書中</h3>
+                <div class="book-item">
+                    <div class="book-title">罪と罰</div>
+                    <div class="book-author">ドストエフスキー</div>
+                    <div class="book-description">進捗: 45% (220/480ページ)</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 45%"></div>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn"><i class="fas fa-pen"></i> 読書記録</button>
+                    </div>
+                </div>
+                
+                <h3><i class="fas fa-check-circle"></i> 読了済み</h3>
+                <div class="book-item">
+                    <div class="book-title">こころ</div>
+                    <div class="book-author">夏目漱石</div>
+                    <div class="book-description">読了日: 2024-01-15</div>
+                    <div style="margin: 8px 0;">
+                        <i class="fas fa-star" style="color: #ffd700;"></i>
+                        <i class="fas fa-star" style="color: #ffd700;"></i>
+                        <i class="fas fa-star" style="color: #ffd700;"></i>
+                        <i class="fas fa-star" style="color: #ffd700;"></i>
+                        <i class="fas fa-star" style="color: #ffd700;"></i>
+                    </div>
+                    <div class="btn-group">
+                        <button class="btn secondary"><i class="fas fa-comment-dots"></i> レビュー</button>
+                    </div>
+                </div>
+                
+                <h3><i class="fas fa-bookmark"></i> 読みたい本</h3>
+                <div class="book-item">
+                    <div class="book-title">ノルウェイの森</div>
+                    <div class="book-author">村上春樹</div>
+                    <div class="book-description">追加日: 2024-01-10</div>
+                    <div class="btn-group">
+                        <button class="btn accent"><i class="fas fa-play"></i> 読書開始</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- プロフィール画面 -->
+            <div id="profile" class="screen">
+                <h2 class="section-title">プロフィール</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-number">42</span>
+                        <span class="stat-label">読了冊数</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">50</span>
+                        <span class="stat-label">年間目標</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">4.2</span>
+                        <span class="stat-label">平均評価</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-number">85</span>
+                        <span class="stat-label">フォロワー</span>
+                    </div>
+                </div>
+                
+                <div class="book-item">
+                    <div class="book-title"><i class="fas fa-chart-line"></i> 年間目標進捗</div>
+                    <div class="book-description">42/50冊 (84%)</div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 84%"></div>
+                    </div>
+                </div>
+                
+                <div class="book-item">
+                    <div class="book-title"><i class="fas fa-trophy"></i> 実績</div>
+                    <div class="book-description">
+                        <i class="fas fa-medal" style="color: #ffd700;"></i> 読書家: 10冊達成<br>
+                        <i class="fas fa-star" style="color: #ffd700;"></i> 評論家: レビュー20件<br>
+                        <i class="fas fa-users" style="color: #ffd700;"></i> 社交家: フォロワー50人
+                    </div>
+                </div>
+                
+                <div class="btn-group">
+                    <button class="btn"><i class="fas fa-cog"></i> 設定</button>
+                    <button class="btn secondary"><i class="fas fa-sign-out-alt"></i> ログアウト</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- フローティングアクションボタン -->
+        <button class="floating-action">
+            <i class="fas fa-plus"></i>
+        </button>
+        </div>
+    </div>
+    
+    <script>
+        function showScreen(screenId, element) {
+            // 全ての画面を非表示
+            const screens = document.querySelectorAll('.screen');
+            screens.forEach(screen => screen.classList.remove('active'));
+            
+            // 指定された画面を表示
+            document.getElementById(screenId).classList.add('active');
+            
+            // ナビゲーションのアクティブ状態を更新
+            const navItems = document.querySelectorAll('.nav-item');
+            navItems.forEach(item => item.classList.remove('active'));
+            element.classList.add('active');
+        }
+        
+        function toggleTheme() {
+            const body = document.body;
+            const themeIcon = document.getElementById('theme-icon');
+            
+            body.classList.toggle('dark');
+            
+            if (body.classList.contains('dark')) {
+                themeIcon.className = 'fas fa-sun';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                themeIcon.className = 'fas fa-moon';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+        
+        // 簡単なインタラクション
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('BookLover SNS アプリが起動しました');
+            
+            // 保存されたテーマを読み込み
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark');
+                document.getElementById('theme-icon').className = 'fas fa-sun';
+            }
+            
+            // ボタンクリックエフェクト
+            document.addEventListener('click', function(e) {
+                if (e.target.classList.contains('btn') || e.target.closest('.btn')) {
+                    const btn = e.target.classList.contains('btn') ? e.target : e.target.closest('.btn');
+                    btn.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        btn.style.transform = '';
+                    }, 150);
+                }
+            });
+            
+            // カードホバーエフェクト
+            const cards = document.querySelectorAll('.book-item, .stat-card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-4px)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = '';
+                });
+            });
+            
+            // プログレスバーアニメーション
+            const progressBars = document.querySelectorAll('.progress-fill');
+            progressBars.forEach(bar => {
+                const width = bar.style.width;
+                bar.style.width = '0%';
+                setTimeout(() => {
+                    bar.style.width = width;
+                }, 500);
+            });
+            
+            // フローティングアクションボタン
+            document.querySelector('.floating-action').addEventListener('click', function() {
+                alert('新しい投稿を作成');
+            });
+        });
+    </script>
+</body>
+</html>
